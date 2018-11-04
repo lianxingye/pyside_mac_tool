@@ -5,6 +5,13 @@ import random
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtWidgets import QWidget, QSpinBox, QApplication
 
+
+from PySide2.QtCore import QThread
+from PySide2.QtWidgets import QApplication, QMessageBox
+import time
+
+
+
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -13,6 +20,7 @@ class MyWidget(QtWidgets.QWidget):
             "Hola Mundo", "Привет мир"]
 
         self.button = QtWidgets.QPushButton("Click me!")
+        self.button.clicked.connect(self.getText)
         self.text = QtWidgets.QLabel("Hello World")
         self.text.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -30,8 +38,14 @@ class MyWidget(QtWidgets.QWidget):
         self.cursor.insertText("[Cursor Input]")
         self.layout.addWidget(self.textedit)
 
+        button = QtWidgets.QPushButton('popup', self) # Create the button
+        button.setFont(QtGui.QFont("Titillium", 80))
+        button.clicked.connect(self.popup) # Cause the window to quit when button is clicked
+        button.resize(200,200) # Resize the button to the suggested height
+        button.move(0, 0) # Move where the button is located
+        self.layout.addWidget(button)
+
         #self.button.clicked.connect(self.magic)
-        self.button.clicked.connect(self.getText)
 
         button = QtWidgets.QPushButton('PASSWORD', self) # Create the button
         button.setFont(QtGui.QFont("Titillium", 80))
@@ -44,7 +58,6 @@ class MyWidget(QtWidgets.QWidget):
         button1.clicked.connect(QApplication.instance().quit) # Cause the window to quit when button is clicked
         button1.resize(200,200) # Resize the button to the suggested height
         button1.move(200, 0) # Move where the button is located
-
 
         self.layout.addWidget(button)
 
@@ -60,6 +73,15 @@ class MyWidget(QtWidgets.QWidget):
 
     def magic(self):
         self.text.setPlainText(random.choice(self.hello))
+        return msg
+
+    def popup(self):
+        #(text, bool) = QtWidgets.QInputDialog.getText(None, "title", "label")
+        #print(text)
+
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setText("The document has been modified.");
+        msgBox.exec_();
 
     def paste(self):
         clipboard = QApplication.clipboard()
