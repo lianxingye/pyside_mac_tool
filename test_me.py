@@ -13,17 +13,21 @@ def get_pr_detail(my_id):
       r.close()
 
 def handle(my_id):
+  print "handle "+str(my_id)
   with open('/tmp/'+str(my_id)) as f:
     data = json.load(f)
 
   values=data["values"]
   for i in values:
-   if i[u'action'] == u'COMMENTED':
+   if i[u'action'] == u'COMMENTED' and i[u'comment'][u'text'] == 'test me':
+    print "found test me "+str(my_id)
     replies = i[u'comment'][u'comments']
     if replies == []:
-      print "BINGO!"
+      print "BINGO! "+str(my_id)
       id=i[u'comment'][u'id']
       reply(id, "test done1")
+    else:
+      print "already handled before "+str(my_id)
 
 def reply(id, content):
       auth='tosoth:123123'
