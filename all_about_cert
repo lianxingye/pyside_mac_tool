@@ -1,0 +1,13 @@
+# first time openssl config is buggy, do this
+   69  touch /etc/pki/CA/index.txt
+   70  echo '1000' > /etc/pki/CA/serial
+
+# for vault server generate two keys
+   22  openssl req -new -key vault-server.key > vault-server.csr
+   23  openssl x509 -req -signkey vault-server.key < vault-server.csr > vault-server.crt 
+
+# ca.key is vault-server.key
+# client.crt is server.crt
+# client.key is server.key
+   71  openssl ca -in server.csr -out server.crt -cert vault-server.crt -keyfile vault-server.key 
+
