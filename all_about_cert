@@ -11,3 +11,5 @@
 # client.key is server.key
    71  openssl ca -in server.csr -out server.crt -cert vault-server.crt -keyfile vault-server.key 
 
+# Then, you can use vault command
+   vault status -ca-cert=vault-server.crt -client-cert=server.crt -client-key=server.key
