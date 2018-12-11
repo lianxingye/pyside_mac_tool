@@ -1,21 +1,22 @@
 # first time openssl config is buggy, do this
-   69  touch /etc/pki/CA/index.txt
-   70  echo '1000' > /etc/pki/CA/serial
+touch /etc/pki/CA/index.txt
+echo '1000' > /etc/pki/CA/serial
+
+========================= server key
 
 # for vault server generate two keys
-> openssl genrsa 2048 > vault-server.key
-> openssl req -new -key vault-server.key > vault-server.csr
+openssl genrsa 2048 > vault-server.key
+openssl req -new -key vault-server.key > vault-server.csr
 JP
 tokyo
 tokyo
 rakuten
 travel
 dev-axxxx.xxx.xx.local
-> openssl x509 -req -signkey vault-server.key < vault-server.csr > vault-server.crt 
+openssl x509 -req -signkey vault-server.key < vault-server.csr > vault-server.crt 
 
-# ca.key is vault-server.key
-# client.crt is server.crt
-# client.key is server.key
+========================= client key
+
 > openssl genrsa 2048 > server.key
 > openssl req -new -key server.key > server.csr
 JP
@@ -24,12 +25,13 @@ tokyo
 rakuten
 travel
 dev-axxxx.xxx.xx.local
-
-> openssl ca -in server.csr -out server.crt -cert vault-server.crt -keyfile vault-server.key 
+openssl ca -in server.csr -out server.crt -cert vault-server.crt -keyfile vault-server.key 
 
 # Then, you can use vault command
    vault status -ca-cert=vault-server.crt -client-cert=server.crt -client-key=server.key
 
+nohup vault server -config=config.hcl &
+export VAULT_ADDR=https://xxxx:8200
 
 https://github.com/lianxingye/rakuten_mac_tool/edit/master/all_about_cert
 https://learn.hashicorp.com/vault/operations/ops-deployment-guide
