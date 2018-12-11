@@ -17,8 +17,8 @@ openssl x509 -req -signkey vault-server.key < vault-server.csr > vault-server.cr
 
 ========================= client key
 
-> openssl genrsa 2048 > server.key
-> openssl req -new -key server.key > server.csr
+openssl genrsa 2048 > server.key
+openssl req -new -key server.key > server.csr
 JP
 tokyo
 tokyo
