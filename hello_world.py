@@ -5,6 +5,13 @@ import random
 from PySide2 import QtCore, QtWidgets, QtGui
 from PySide2.QtWidgets import QWidget, QSpinBox, QApplication
 
+
+from PySide2.QtCore import QThread
+from PySide2.QtWidgets import QApplication, QMessageBox
+import time
+
+
+
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -140,6 +147,15 @@ class MyWidget(QtWidgets.QWidget):
 
     def magic(self):
         self.text.setPlainText(random.choice(self.hello))
+        return msg
+
+    def popup(self):
+        #(text, bool) = QtWidgets.QInputDialog.getText(None, "title", "label")
+        #print(text)
+
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setText("The document has been modified.");
+        msgBox.exec_();
 
     def paste(self):
         clipboard = QApplication.clipboard()
