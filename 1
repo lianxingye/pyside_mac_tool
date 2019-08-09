@@ -1,0 +1,814 @@
+Alertmanager
+Alerts
+Silences
+Status
+Status
+Uptime:
+2019-01-25T14:04:49.982186003+09:00
+Cluster Status
+Name:
+01D21PAW9V095DV4TMSV081HJM
+Status:
+ready
+Peers:
+Name: 01D21PAW9V095DV4TMSV081HJM
+Address: 100.72.139.151:9094
+Version Information
+Branch:
+HEAD
+BuildDate:
+20180814-10:53:39
+BuildUser:
+root@3101e5b68a55
+GoVersion:
+go1.10.3
+Revision:
+d19fae3bae451940b8470abb680cfdd59bfa7cfa
+Version:
+0.15.2
+Config
+global:
+  resolve_timeout: 5m
+  http_config: {}
+  smtp_from: trv-infra-svr@mail.rakuten.com
+  smtp_hello: localhost
+  smtp_smarthost: mgw2.prod.jp.local:25
+  smtp_require_tls: true
+  pagerduty_url: https://events.pagerduty.com/v2/enqueue
+  hipchat_api_url: https://api.hipchat.com/
+  hipchat_auth_token: <secret>
+  opsgenie_api_url: https://api.opsgenie.com/
+  wechat_api_url: https://qyapi.weixin.qq.com/cgi-bin/
+  victorops_api_url: https://alert.victorops.com/integrations/generic/20131114/alert/
+route:
+  receiver: no_action
+  group_by:
+  - monitor_type
+  - severity
+  - instance
+  - application
+  - app_id
+  - app_team_name
+  routes:
+  - receiver: travel_svr_ms_team
+    match_re:
+      category: ^(?:disk)$
+      monitor_type: ^(?:sys_common|sys_custom)$
+      severity: ^(?:warning)$
+    continue: true
+    repeat_interval: 3h
+  - receiver: travel_svr_ms_team
+    match_re:
+      category: ^(?:disk)$
+      monitor_type: ^(?:sys_common|sys_custom)$
+      severity: ^(?:critical)$
+    continue: true
+    repeat_interval: 30m
+  - receiver: travel_common
+    match_re:
+      category: ^(?:disk)$
+      severity: ^(?:information|warning)$
+    repeat_interval: 3h
+  - receiver: travel_common
+    match_re:
+      category: ^(?:disk)$
+      severity: ^(?:critical)$
+    continue: true
+    repeat_interval: 30m
+  - receiver: travel_svr_critical
+    match_re:
+      category: ^(?:disk)$
+      severity: ^(?:critical)$
+    repeat_interval: 30m
+  - receiver: no_action
+    match:
+      severity: information
+    continue: true
+    repeat_interval: 12h
+  - receiver: travel_common
+    match:
+      severity: warning
+    continue: true
+    repeat_interval: 3h
+  - receiver: travel_common
+    match_re:
+      severity: ^(?:critical)$
+    continue: true
+    group_interval: 2m
+    repeat_interval: 30m
+  - receiver: travel_svr_critical
+    match_re:
+      monitor_type: ^(?:sys_common|sys_custom)$
+      severity: ^(?:critical)$
+    continue: true
+    group_interval: 2m
+    repeat_interval: 30m
+  - receiver: travel_svr_ms_team
+    match_re:
+      monitor_type: ^(?:sys_common|sys_custom)$
+      severity: ^(?:warning)$
+    continue: true
+    group_interval: 2m
+    repeat_interval: 30m
+  - receiver: travel_svr_ms_team
+    match_re:
+      monitor_type: ^(?:sys_common|sys_custom)$
+      severity: ^(?:critical)$
+    continue: true
+    group_interval: 2m
+    repeat_interval: 30m
+  - receiver: travel-accounting_warning
+    match_re:
+      app_team_name: ^(?:travel-accounting)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-accounting_critical
+    match_re:
+      app_team_name: ^(?:travel-accounting)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-apm_warning
+    match_re:
+      app_team_name: ^(?:travel-apm)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-apm_critical
+    match_re:
+      app_team_name: ^(?:travel-apm)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-area_warning
+    match_re:
+      app_team_name: ^(?:travel-area)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-area_critical
+    match_re:
+      app_team_name: ^(?:travel-area)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-common_warning
+    match_re:
+      app_team_name: ^(?:travel-common)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-common_critical
+    match_re:
+      app_team_name: ^(?:travel-common)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-distribution_warning
+    match_re:
+      app_team_name: ^(?:travel-distribution)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-distribution_critical
+    match_re:
+      app_team_name: ^(?:travel-distribution)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-devops_warning
+    match_re:
+      app_team_name: ^(?:travel-devops)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-devops_critical
+    match_re:
+      app_team_name: ^(?:travel-devops)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-dwh_warning
+    match_re:
+      app_team_name: ^(?:travel-dwh)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-dwh_critical
+    match_re:
+      app_team_name: ^(?:travel-dwh)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-extranet_warning
+    match_re:
+      app_team_name: ^(?:travel-extranet)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-extranet_critical
+    match_re:
+      app_team_name: ^(?:travel-extranet)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-hotel-front_warning
+    match_re:
+      app_team_name: ^(?:travel-hotel-front)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-hotel-front_critical
+    match_re:
+      app_team_name: ^(?:travel-hotel-front)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-invcore_warning
+    match_re:
+      app_team_name: ^(?:travel-invcore)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-invcore_critical
+    match_re:
+      app_team_name: ^(?:travel-invcore)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-item_warning
+    match_re:
+      app_team_name: ^(?:travel-item)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-item_critical
+    match_re:
+      app_team_name: ^(?:travel-item)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-jp-booking_warning
+    match_re:
+      app_team_name: ^(?:travel-jp-booking)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-jp-booking_critical
+    match_re:
+      app_team_name: ^(?:travel-jp-booking)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-jp-dp_warning
+    match_re:
+      app_team_name: ^(?:travel-jp-dp)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-jp-dp_critical
+    match_re:
+      app_team_name: ^(?:travel-jp-dp)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-maint_warning
+    match_re:
+      app_team_name: ^(?:travel-maint)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-maint_critical
+    match_re:
+      app_team_name: ^(?:travel-maint)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-notice_warning
+    match_re:
+      app_team_name: ^(?:travel-notice)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-notice_critical
+    match_re:
+      app_team_name: ^(?:travel-notice)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-notification_warning
+    match_re:
+      app_team_name: ^(?:travel-notification)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-notification_critical
+    match_re:
+      app_team_name: ^(?:travel-notification)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-ntpf_warning
+    match_re:
+      app_team_name: ^(?:travel-ntpf)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-ntpf_critical
+    match_re:
+      app_team_name: ^(?:travel-ntpf)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-racco_warning
+    match_re:
+      app_team_name: ^(?:travel-racco)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-racco_critical
+    match_re:
+      app_team_name: ^(?:travel-racco)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-sustain_warning
+    match_re:
+      app_team_name: ^(?:travel-sustain)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-sustain_critical
+    match_re:
+      app_team_name: ^(?:travel-sustain)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-tsp_warning
+    match_re:
+      app_team_name: ^(?:travel-tsp)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-tsp_critical
+    match_re:
+      app_team_name: ^(?:travel-tsp)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: travel-tagsystem_warning
+    match_re:
+      app_team_name: ^(?:travel-tagsystem)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+  - receiver: travel-tagsystem_critical
+    match_re:
+      app_team_name: ^(?:travel-tagsystem)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+  - receiver: trv_dm_warning
+    match_re:
+      app_team_name: ^(?:trv_dm)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:information|warning)$
+    continue: true
+  - receiver: trv_dm_critical
+    match_re:
+      app_team_name: ^(?:trv_dm)$
+      monitor_type: ^(?:app_common|app_custom)$
+      severity: ^(?:critical)$
+    continue: true
+  - receiver: pd_trv_accounting
+    match_re:
+      application: ^(?:accounting-api|fia-api|fialoader)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_affiliate
+    match_re:
+      application: ^(?:affiliate-api|partnergw)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_content_search
+    match_re:
+      application: ^(?:breadcrumbsapi|relatedlinksapi|tag-autocomplete-api|tagjenaapi|tagsystem-metrics-api|tagsystemapi|tagsystembatch|tagsystemsearchapi|textexaminationapi|tobetextexaminationapi)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_cross_use_search
+    match_re:
+      application: ^(?:app-test|hecu-event)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_currencysync
+    match_re:
+      application: ^(?:currencysync)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_distribution_api
+    match_re:
+      application: ^(?:dist-rate)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_event
+    match_re:
+      application: ^(?:event-scheduler-api|event-scheduler-batch)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_foundation
+    match_re:
+      application: ^(?:cf-discovery4prom|config-server)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_front_end
+    match_re:
+      application: ^(?:trv-fed-consumer|trv-fed-extranet|trv-fed-mhtml)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_guest_review
+    match_re:
+      application: ^(?:popularity-crud|popularity-service|provider-score|provider-score-crud|review-batch|review-consumer|review-crud)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_history_apis
+    match_re:
+      application: ^(?:history-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_inventory_internal_api
+    match_re:
+      application: ^(?:event-search|provider-data-api|provider-gate-search-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_kadas
+    match_re:
+      application: ^(?:kadas|kadas-stream)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_member
+    match_re:
+      application: ^(?:account-management|auth-end-users|auth-extranet-users|extranet-user|idsync-delete-batch|member|member-point-crud|member-point-grant|member-point-use|member-rest|verify-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_notification
+    match_re:
+      application: ^(?:notification-api-callee-service|notification-api-caller-service|notification-crud|notification-gateway|notification-mail-bounce-logger|notification-mail-sending-service|notification-queue-inserter)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_provider_domain_ari
+    match_re:
+      application: ^(?:currency-api|item-domain|market-api|media-api|option-domain|partner-domain|provider-domain|question-domain|rate-modifier-api|sales-promotion-api|salespromotion-template)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_provider_platform
+    match_re:
+      application: ^(?:availability-api|cancelpolicy|id-generator|inventory-control|question-orch|rate-calculation-api|term-translation-listener)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_provider_rcv4_ari
+    match_re:
+      application: ^(?:rcv4-item|rcv4-media|rcv4-option|rcv4-provider|rcv4-rate-modifier|rcv4-sales-promotion)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_provider_xtrnet_ari
+    match_re:
+      application: ^(?:partner-bulk|partner-creation|xtrnet-item|xtrnet-media|xtrnet-option|xtrnet-pricecontrol|xtrnet-provider|xtrnet-rate-modifier|xtrnet-salespromotion)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_recommendation_api
+    match_re:
+      application: ^(?:recommendation|recommendation-orch-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_reservation
+    match_re:
+      application: ^(?:old-dlq-message-mover|r-connect-bmc|reservation-change-api|reservation-changeable-builder|reservation-complete|reservation-core|reservation-mq-consumer|reservation-search)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_reservation_presentation
+    match_re:
+      application: ^(?:compound-builder|deals|deals-orchestration|extranet-bmc|mypage-confirmation|receipt|receipt-crud|reservation-assistance|reservation-step1|reservation-step2|reservation-step3|sales-promotion-component)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_route
+    match_re:
+      application: ^(?:air-domain|air-switch|route-core|route-kadas)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_search_pages
+    match_re:
+      application: ^(?:price-calendar|providers-api|providers-items|providers-opts|providers-promo|trips-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_suggestion_api
+    match_re:
+      application: ^(?:suggestion-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_term
+    match_re:
+      application: ^(?:term-api|term-orch-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_visual_examination
+    match_re:
+      application: ^(?:visual-examination|visual-examination-crud)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_itinerary_apis
+    match_re:
+      application: ^(?:itinerary-converter|itinerary-crud|mypage|pdf-common|pdf-orchestration|reservation-event-api)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_qa_tools
+    match_re:
+      application: ^(?:csv_importer)$
+      severity: ^(?:warning|critical)$
+  - receiver: pd_trv_springboot_admin
+    match_re:
+      application: ^(?:sba-deregistration-test|spring-boot-admin)$
+      severity: ^(?:warning|critical)$
+  - receiver: app_default_warning
+    match_re:
+      monitor_type: ^(?:app_custom|app_common)$
+      severity: ^(?:warning)$
+  - receiver: app_default_critical
+    match_re:
+      monitor_type: ^(?:app_custom|app_common)$
+      severity: ^(?:critical)$
+  group_wait: 30s
+  group_interval: 2m
+  repeat_interval: 30m
+inhibit_rules:
+- source_match:
+    severity: critical
+  target_match:
+    severity: warning
+  equal:
+  - monitor_type
+  - instance
+  - application
+  - app_id
+  - app_team_name
+- source_match:
+    severity: warning
+  target_match:
+    severity: information
+  equal:
+  - monitor_type
+  - instance
+  - application
+  - app_id
+  - app_team_name
+receivers:
+- name: no_action
+- name: travel_common
+  hipchat_configs:
+  - send_resolved: false
+    http_config:
+      proxy_url: http://ptrdevext.travel.prod.jp.local:3128
+    api_url: https://api.hipchat.com/
+    auth_token: <secret>
+    room_id: "4648364"
+    from: '{{ template "hipchat.default.from" . }}'
+    notify: true
+    message: '{{ template "hipchat.custom.message001" . }}'
+    message_format: html
+    color: '{{ if eq .GroupLabels.severity "critical" }}red{{ else if eq .GroupLabels.severity
+      "warning" }}yellow{{ else }}gray{{ end }}'
+- name: travel_svr_warning
+- name: travel_svr_critical
+  email_configs:
+  - send_resolved: false
+    to: rbell-appalert-trvsvr@mail.sys.rakuten.co.jp
+    from: trv-infra-svr@mail.rakuten.com
+    hello: localhost
+    smarthost: mgw2.prod.jp.local:25
+    headers:
+      From: trv-infra-svr@mail.rakuten.com
+      Subject: '{{ template "email.mobile.subject" . }}'
+      To: rbell-appalert-trvsvr@mail.sys.rakuten.co.jp
+    html: '{{ template "email.default.html" . }}'
+    text: '{{ template "email.mobile.text" . }}'
+    require_tls: false
+- name: travel-accounting_warning
+- name: travel-accounting_critical
+- name: travel-apm_warning
+- name: travel-apm_critical
+- name: travel-area_warning
+- name: travel-area_critical
+- name: travel-common_warning
+- name: travel-common_critical
+- name: travel-distribution_warning
+- name: travel-distribution_critical
+- name: travel-devops_warning
+- name: travel-devops_critical
+- name: travel-dwh_warning
+- name: travel-dwh_critical
+- name: travel-extranet_warning
+- name: travel-extranet_critical
+- name: travel-hotel-front_warning
+- name: travel-hotel-front_critical
+- name: travel-invcore_warning
+- name: travel-invcore_critical
+- name: travel-item_warning
+- name: travel-item_critical
+- name: travel-jp-booking_warning
+- name: travel-jp-booking_critical
+- name: travel-jp-dp_warning
+- name: travel-jp-dp_critical
+- name: travel-maint_warning
+- name: travel-maint_critical
+- name: travel-notice_warning
+- name: travel-notice_critical
+- name: travel-notification_warning
+  hipchat_configs:
+  - send_resolved: false
+    http_config:
+      proxy_url: http://ptrdevext.travel.prod.jp.local:3128
+    api_url: https://api.hipchat.com/
+    auth_token: <secret>
+    room_id: "4728023"
+    from: '{{ template "hipchat.default.from" . }}'
+    notify: true
+    message: '{{ template "hipchat.custom.message001" . }}'
+    message_format: html
+    color: '{{ if eq .GroupLabels.severity "critical" }}red{{ else if eq .GroupLabels.severity
+      "warning" }}yellow{{ else }}gray{{ end }}'
+- name: travel-notification_critical
+  hipchat_configs:
+  - send_resolved: false
+    http_config:
+      proxy_url: http://ptrdevext.travel.prod.jp.local:3128
+    api_url: https://api.hipchat.com/
+    auth_token: <secret>
+    room_id: "4728023"
+    from: '{{ template "hipchat.default.from" . }}'
+    notify: true
+    message: '{{ template "hipchat.custom.message001" . }}'
+    message_format: html
+    color: '{{ if eq .GroupLabels.severity "critical" }}red{{ else if eq .GroupLabels.severity
+      "warning" }}yellow{{ else }}gray{{ end }}'
+- name: travel-ntpf_warning
+- name: travel-ntpf_critical
+- name: travel-racco_warning
+- name: travel-racco_critical
+- name: travel-sustain_warning
+- name: travel-sustain_critical
+- name: travel-tsp_warning
+- name: travel-tsp_critical
+- name: travel-tagsystem_warning
+- name: travel-tagsystem_critical
+  email_configs:
+  - send_resolved: false
+    to: rbell-appalert-trvtagsystem@mail.sys.rakuten.co.jp
+    from: trv-infra-svr@mail.rakuten.com
+    hello: localhost
+    smarthost: mgw2.prod.jp.local:25
+    headers:
+      From: trv-infra-svr@mail.rakuten.com
+      Subject: '{{ template "email.mobile.subject" . }}'
+      To: rbell-appalert-trvtagsystem@mail.sys.rakuten.co.jp
+    html: '{{ template "email.default.html" . }}'
+    text: '{{ template "email.mobile.text" . }}'
+    require_tls: false
+- name: trv_dm_warning
+  hipchat_configs:
+  - send_resolved: false
+    http_config:
+      proxy_url: http://ptrdevext.travel.prod.jp.local:3128
+    api_url: https://api.hipchat.com/
+    auth_token: <secret>
+    room_id: "4740117"
+    from: '{{ template "hipchat.default.from" . }}'
+    notify: true
+    message: '{{ template "hipchat.custom.message001" . }}'
+    message_format: html
+    color: '{{ if eq .GroupLabels.severity "critical" }}red{{ else if eq .GroupLabels.severity
+      "warning" }}yellow{{ else }}gray{{ end }}'
+- name: trv_dm_critical
+  email_configs:
+  - send_resolved: false
+    to: travel_nosql@ecdba.pagerduty.com
+    from: trv-infra-svr@mail.rakuten.com
+    hello: localhost
+    smarthost: mgw2.prod.jp.local:25
+    headers:
+      From: trv-infra-svr@mail.rakuten.com
+      Subject: '{{ template "email.mobile.subject" . }}'
+      To: travel_nosql@ecdba.pagerduty.com
+    html: '{{ template "email.default.html" . }}'
+    text: '{{ template "email.mobile.text" . }}'
+    require_tls: false
+  hipchat_configs:
+  - send_resolved: false
+    http_config:
+      proxy_url: http://ptrdevext.travel.prod.jp.local:3128
+    api_url: https://api.hipchat.com/
+    auth_token: <secret>
+    room_id: "4740117"
+    from: '{{ template "hipchat.default.from" . }}'
+    notify: true
+    message: '{{ template "hipchat.custom.message001" . }}'
+    message_format: html
+    color: '{{ if eq .GroupLabels.severity "critical" }}red{{ else if eq .GroupLabels.severity
+      "warning" }}yellow{{ else }}gray{{ end }}'
+- name: pd_trv_accounting
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_accounting
+- name: pd_trv_affiliate
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_affiliate
+- name: pd_trv_content_search
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_content_search
+- name: pd_trv_cross_use_search
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_cross_use_search
+- name: pd_trv_currencysync
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_currencysync
+- name: pd_trv_distribution_api
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_distribution_api
+- name: pd_trv_event
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_event
+- name: pd_trv_foundation
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_foundation
+- name: pd_trv_front_end
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_front_end
+- name: pd_trv_guest_review
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_guest_review
+- name: pd_trv_history_apis
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_history_apis
+- name: pd_trv_inventory_internal_api
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_inventory_internal_api
+- name: pd_trv_kadas
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_kadas
+- name: pd_trv_member
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_member
+- name: pd_trv_notification
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_notification
+- name: pd_trv_provider_domain_ari
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_provider_domain_ari
+- name: pd_trv_provider_platform
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_provider_platform
+- name: pd_trv_provider_rcv4_ari
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_provider_rcv4_ari
+- name: pd_trv_provider_xtrnet_ari
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_provider_xtrnet_ari
+- name: pd_trv_recommendation_api
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_recommendation_api
+- name: pd_trv_reservation
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_reservation
+- name: pd_trv_reservation_presentation
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_reservation_presentation
+- name: pd_trv_route
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_route
+- name: pd_trv_search_pages
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_search_pages
+- name: pd_trv_suggestion_api
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_suggestion_api
+- name: pd_trv_term
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_term
+- name: pd_trv_visual_examination
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_visual_examination
+- name: pd_trv_itinerary_apis
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_itinerary_apis
+- name: pd_trv_qa_tools
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_qa_tools
+- name: pd_trv_springboot_admin
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/trv_springboot_admin
+- name: travel_svr_ms_team
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/svr_team
+- name: app_default_critical
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/app_default
+- name: app_default_warning
+  webhook_configs:
+  - send_resolved: false
+    http_config: {}
+    url: http://localhost:2000/app_default
+templates:
+- /usr/local/prometheus/alertmanager/templates/*.tmpl
+
